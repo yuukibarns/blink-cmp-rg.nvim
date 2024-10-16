@@ -1,2 +1,3 @@
 # blink-cmp-rg
-Ripgrep source for blink.nvim
+
+Ripgrep source for blink.nvim.
