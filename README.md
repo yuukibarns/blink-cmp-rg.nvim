@@ -1,6 +1,6 @@
 # blink-cmp-rg.nvim
 
-Ripgrep source for blink.nvim.
+Ripgrep source for [blink.cmp](https://github.com/Saghen/blink.cmp).
 
 ```lua
 require("blink.cmp").setup({
