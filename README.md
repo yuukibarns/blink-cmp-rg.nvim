@@ -1,5 +1,9 @@
 # blink-cmp-rg.nvim
 
+**This source has been merged into blink.cmp, it's a builtin source now.**
+
+---
+
 Ripgrep source for [blink.cmp](https://github.com/Saghen/blink.cmp).
 
 ```lua
