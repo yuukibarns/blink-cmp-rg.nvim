@@ -20,6 +20,7 @@ require("blink.cmp").setup({
 							"--word-regexp",
 							"--color",
 							"never",
+							"-i",
 							prefix .. "[\\w_-]+",
 							vim.fs.root(0, "git") or vim.fn.getcwd(),
 						}
@@ -35,5 +36,4 @@ require("blink.cmp").setup({
 		},
 	},
 })
-
 ```
