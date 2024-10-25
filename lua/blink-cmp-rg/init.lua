@@ -10,7 +10,7 @@ function RgSource.new(opts)
 				"--no-config",
 				"--json",
 				"--word-regexp",
-				"--case-sensitive",
+				"--ignore-case",
 				"--",
 				prefix .. "[\\w_-]+",
 				vim.fs.root(0, "git") or vim.fn.getcwd(),
