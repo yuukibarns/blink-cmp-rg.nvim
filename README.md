@@ -6,7 +6,7 @@ Ripgrep source for [blink.cmp](https://github.com/Saghen/blink.cmp).
 require("blink.cmp").setup({
 	sources = {
 		completion = {
-			enabled_providers = { "lsp", "path", "snippets", "buffer", "ripgrep" }, -- add "rg" here
+			enabled_providers = { "lsp", "path", "snippets", "buffer", "ripgrep" }, -- add "ripgrep" here
 		},
 		providers = {
 			-- other sources
