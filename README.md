@@ -15,6 +15,8 @@ require("blink.cmp").setup({
 				name = "Ripgrep",
 				-- options below are optional, these are the default values
 				opts = {
+					-- blink.cmp get prefix in a different way,
+					-- thus use `prefix_min_len` instead of `min_keyword_length`
 					prefix_min_len = 3,
 					get_command = function(context, prefix)
 						return {
@@ -39,5 +41,4 @@ require("blink.cmp").setup({
 		},
 	},
 })
-
 ```
