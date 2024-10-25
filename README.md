@@ -39,4 +39,5 @@ require("blink.cmp").setup({
 		},
 	},
 })
+
 ```

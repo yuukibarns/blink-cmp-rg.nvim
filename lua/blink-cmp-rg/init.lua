@@ -4,6 +4,7 @@ function RgSource.new(opts)
 	opts = opts or {}
 
 	return setmetatable({
+		prefix_min_len = opts.prefix_min_len or 3,
 		get_command = opts.get_command or function(_, prefix)
 			return {
 				"rg",
@@ -28,6 +29,11 @@ end
 
 function RgSource:get_completions(context, resolve)
 	local prefix = self.get_prefix(context)
+
+	if string.len(prefix) < self.prefix_min_len then
+		resolve()
+		return
+	end
 
 	vim.system(self.get_command(context, prefix), nil, function(result)
 		if result.code ~= 0 then
