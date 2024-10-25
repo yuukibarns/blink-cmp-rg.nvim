@@ -9,6 +9,7 @@ require("blink.cmp").setup({
 			enabled_providers = { "lsp", "path", "snippets", "buffer", "ripgrep" }, -- add "rg" here
 		},
 		providers = {
+			-- other sources
 			ripgrep = {
 				module = "blink-cmp-rg",
 				name = "Ripgrep",
@@ -21,7 +22,7 @@ require("blink.cmp").setup({
 							"--no-config",
 							"--json",
 							"--word-regexp",
-							"--case-sensitive",
+							"--ignore-case",
 							"--",
 							prefix .. "[\\w_-]+",
 							vim.fs.root(0, "git") or vim.fn.getcwd(),
