@@ -18,12 +18,11 @@ require("blink.cmp").setup({
 					get_command = function(context, prefix)
 						return {
 							"rg",
-							"--heading",
+							"--no-config",
 							"--json",
 							"--word-regexp",
-							"--color",
-							"never",
-							"-i",
+							"--case-sensitive",
+							"--",
 							prefix .. "[\\w_-]+",
 							vim.fs.root(0, "git") or vim.fn.getcwd(),
 						}
