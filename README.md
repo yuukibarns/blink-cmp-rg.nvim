@@ -5,10 +5,13 @@ Ripgrep source for [blink.cmp](https://github.com/Saghen/blink.cmp).
 ```lua
 require("blink.cmp").setup({
 	sources = {
+		completion = {
+			enabled_providers = { "lsp", "path", "snippets", "buffer", "ripgrep" }, -- add "rg" here
+		},
 		providers = {
-			{
-				"blink-cmp-rg",
-				name = "Rg",
+			ripgrep = {
+				module = "blink-cmp-rg",
+				name = "Ripgrep",
 				-- options below are optional, these are the default values
 				opts = {
 					prefix_min_len = 3,
