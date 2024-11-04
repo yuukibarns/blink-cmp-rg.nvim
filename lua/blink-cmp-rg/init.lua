@@ -1,5 +1,11 @@
+---@class blink-cmp-rg.Options
+---@field prefix_min_len? number
+---@field get_command? fun(context: blink.cmp.Context, prefix: string): string[]
+---@field get_prefix? fun(context: blink.cmp.Context): string[]
+
 local RgSource = {}
 
+---@param opts blink-cmp-rg.Options
 function RgSource.new(opts)
 	opts = opts or {}
 
