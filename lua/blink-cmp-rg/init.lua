@@ -23,11 +23,8 @@ function RgSource.new(opts)
 				vim.fs.root(0, ".git") or vim.fn.getcwd(),
 			}
 		end,
-		get_prefix = opts.get_prefix or function(_)
-			local col = vim.api.nvim_win_get_cursor(0)[2]
-			local line = vim.api.nvim_get_current_line()
-			local prefix = line:sub(1, col):match("[%w_-]+$") or ""
-			return prefix
+		get_prefix = opts.get_prefix or function(context)
+			return context.line:sub(1, context.cursor[2]):match("[%w_-]+$") or ""
 		end,
 	}, { __index = RgSource })
 end
