@@ -5,9 +5,8 @@ Ripgrep source for [blink.cmp](https://github.com/Saghen/blink.cmp).
 ```lua
 require("blink.cmp").setup({
 	sources = {
-		completion = {
-			enabled_providers = { "lsp", "path", "snippets", "buffer", "ripgrep" }, -- add "ripgrep" here
-		},
+        -- add "ripgrep" here
+		default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
 		providers = {
 			-- other sources
 			ripgrep = {
@@ -16,8 +15,8 @@ require("blink.cmp").setup({
 				-- options below are optional, these are the default values
 				---@type blink-cmp-rg.Options
 				opts = {
-                    -- `min_keyword_length` only determines whether to show completion items in the menu,
-                    -- not whether to trigger a search. And we only has one chance to search.
+					-- `min_keyword_length` only determines whether to show completion items in the menu,
+					-- not whether to trigger a search. And we only has one chance to search.
 					prefix_min_len = 3,
 					get_command = function(context, prefix)
 						return {
