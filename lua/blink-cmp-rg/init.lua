@@ -7,70 +7,69 @@ local RgSource = {}
 
 ---@param opts blink-cmp-rg.Options
 function RgSource.new(opts)
-	opts = opts or {}
+    opts = opts or {}
 
-	return setmetatable({
-		prefix_min_len = opts.prefix_min_len or 3,
-		get_command = opts.get_command or function(_, prefix)
-			return {
-				"rg",
-				"--no-config",
-				"--json",
-				"--word-regexp",
-				"--ignore-case",
-				"--",
-				prefix .. "[\\w_-]+",
-				vim.fs.root(0, ".git") or vim.fn.getcwd(),
-			}
-		end,
-		get_prefix = opts.get_prefix or function(context)
-			return context.line:sub(1, context.cursor[2]):match("[%w_-]+$") or ""
-		end,
-	}, { __index = RgSource })
+    return setmetatable({
+        get_command = opts.get_command or function()
+            return {
+                "rg",
+                "--no-config",
+                "--json",
+                "--word-regexp",
+                "--ignore-case",
+                "--type=md",
+                "--",
+                "^(<!-- )?#+\\s+.+",
+                vim.fs.root(0, ".git") or vim.fn.getcwd(),
+            }
+        end,
+    }, { __index = RgSource })
 end
 
+function RgSource:enabled() return vim.bo.filetype == 'markdown' end
+
 function RgSource:get_completions(context, resolve)
-	local prefix = self.get_prefix(context)
+    if context.line:sub(context.bounds.start_col - 2, context.bounds.start_col - 1) ~= "**" then
+        resolve()
+        return
+    end
 
-	if string.len(prefix) < self.prefix_min_len then
-		resolve()
-		return
-	end
+    vim.system(self.get_command(), nil, function(result)
+        if result.code ~= 0 then
+            resolve()
+            return
+        end
 
-	vim.system(self.get_command(context, prefix), nil, function(result)
-		if result.code ~= 0 then
-			resolve()
-			return
-		end
+        local items = {}
+        local lines = vim.split(result.stdout, "\n")
+        vim.iter(lines)
+            :map(function(line)
+                local ok, item = pcall(vim.json.decode, line)
+                return ok and item or {}
+            end)
+            :filter(function(item)
+                return item.type == "match"
+            end)
+            :map(function(item)
+                return item.data.submatches
+            end)
+            :flatten()
+            :each(function(submatch)
+                items[submatch.match.text] = {
+                    label = submatch.match.text:gsub("^<!%-%-%s+", ""):gsub("%s+%-%->$", ""):gsub("^#+%s+", ""):gsub("%s+$",
+                        ""),
+                    kind = require('blink.cmp.types').CompletionItemKind.Reference,
+                    insertText = submatch.match.text:gsub("^<!%-%-%s+", ""):gsub("%s+%-%->$", ""):gsub("^#+%s+", ""):gsub("%s+$",
+                        ""),
+                }
+            end)
 
-		local items = {}
-		local lines = vim.split(result.stdout, "\n")
-		vim.iter(lines)
-			:map(function(line)
-				local ok, item = pcall(vim.json.decode, line)
-				return ok and item or {}
-			end)
-			:filter(function(item)
-				return item.type == "match"
-			end)
-			:map(function(item)
-				return item.data.submatches
-			end)
-			:flatten()
-			:each(function(submatch)
-				items[submatch.match.text] = {
-					label = submatch.match.text,
-					kind = vim.lsp.protocol.CompletionItemKind.Text,
-					insertText = submatch.match.text,
-				}
-			end)
-
-		resolve({
-			is_incomplete_forward = false,
-			is_incomplete_backward = false,
-			items = vim.tbl_values(items),
-		})
-	end)
+        resolve({
+            is_incomplete_forward = false,
+            is_incomplete_backward = false,
+            items = vim.tbl_values(items),
+        })
+    end)
 end
 
 return RgSource
