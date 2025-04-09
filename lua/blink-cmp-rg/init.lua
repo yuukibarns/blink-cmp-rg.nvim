@@ -19,7 +19,13 @@ function RgSource.new(opts)
                 "--ignore-case",
                 "--type=md",
                 "--",
-                "^(<!-- )?#+\\s+.+",
+                "(" ..
+                "^(<!-- )?#+\\s+.+" ..
+                ")" ..
+                "|" ..
+                "(" ..
+                "^\\*\\*(Definition|Theorem|Lemma|Corollary|Proposition|Example|Problem)\\s+\\(.+?\\)(\\.)?\\*\\*" ..
+                ")",
                 vim.fs.root(0, ".git") or vim.fn.getcwd(),
             }
         end,
@@ -55,13 +61,25 @@ function RgSource:get_completions(context, resolve)
             end)
             :flatten()
             :each(function(submatch)
-                items[submatch.match.text] = {
-                    label = submatch.match.text:gsub("^<!%-%-%s+", ""):gsub("%s+%-%->$", ""):gsub("^#+%s+", ""):gsub("%s+$",
-                        ""),
-                    kind = require('blink.cmp.types').CompletionItemKind.Reference,
-                    insertText = submatch.match.text:gsub("^<!%-%-%s+", ""):gsub("%s+%-%->$", ""):gsub("^#+%s+", ""):gsub("%s+$",
-                        ""),
-                }
+                if submatch.match.text:match("^<!%-%-%s+#+%s+") or submatch.match.text:match("^#+%s+") then
+                    local text = submatch.match.text
+                        :gsub("^<!%-%-%s+", "")
+                        :gsub("%s+%-%->$", "")
+                        :gsub("^#+%s+", "")
+                        :gsub("%s+$", "")
+                    items[submatch.match.text] = {
+                        label = text,
+                        kind = require('blink.cmp.types').CompletionItemKind.Reference,
+                        insertText = text,
+                    }
+                else
+                    local text = submatch.match.text:match("%((.-)%)")
+                    items[submatch.match.text] = {
+                        label = text,
+                        kind = require('blink.cmp.types').CompletionItemKind.Reference,
+                        insertText = text,
+                    }
+                end
             end)
 
         resolve({
