@@ -24,7 +24,7 @@ function RgSource.new(opts)
                 ")" ..
                 "|" ..
                 "(" ..
-                "^\\*\\*(Definition|Theorem|Lemma|Corollary|Proposition|Example|Problem)\\s+\\(.+?\\)(\\.)?\\*\\*" ..
+                "^\\*\\*(Definition|Theorem|Lemma|Corollary|Proposition|Claim|Example|Problem)\\s+\\(.+?\\)(\\.)?\\*\\*" ..
                 ")",
                 vim.fs.root(0, ".git") or vim.fn.getcwd(),
             }
