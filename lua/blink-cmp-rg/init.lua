@@ -32,7 +32,7 @@ function RgSource.new(opts)
     }, { __index = RgSource })
 end
 
-function RgSource:enabled() return vim.bo.filetype == 'markdown' and vim.fs.root(0, ".git") end
+function RgSource:enabled() return vim.bo.filetype == 'markdown' and vim.fs.root(vim.uv.cwd(), ".git") end
 
 function RgSource:get_completions(context, resolve)
     if context.line:sub(context.bounds.start_col - 2, context.bounds.start_col - 1) ~= "**" then
